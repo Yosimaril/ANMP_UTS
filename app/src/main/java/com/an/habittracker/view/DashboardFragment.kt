@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.an.habittracker.R
 import com.an.habittracker.databinding.FragmentDashboardBinding
@@ -14,7 +15,7 @@ import com.an.habittracker.viewmodel.ListViewModel
 
 class DashboardFragment : Fragment() {
     private lateinit var viewModel: ListViewModel
-    private val studentListAdapter  = HabitListAdapter(arrayListOf())
+    private val studentListAdapter = HabitListAdapter(arrayListOf())
     private lateinit var binding: FragmentDashboardBinding
 
     override fun onCreateView(
@@ -34,6 +35,11 @@ class DashboardFragment : Fragment() {
         binding.recViewHabit.layoutManager = LinearLayoutManager(context)
         binding.recViewHabit.adapter = studentListAdapter
 
+        binding.fabAddHabit.setOnClickListener {
+            val action = DashboardFragmentDirections.actionDashboardFragmentToNewHabitFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
+
         observeViewModel()
     }
 
@@ -44,9 +50,9 @@ class DashboardFragment : Fragment() {
 
         viewModel.habitsLoadErrorLD.observe(viewLifecycleOwner, Observer {
             if (it == true) {
-                binding.txtError?.visibility = View.VISIBLE
+                binding.txtError.visibility = View.VISIBLE
             } else {
-                binding.txtError?.visibility = View.GONE
+                binding.txtError.visibility = View.GONE
             }
         })
 

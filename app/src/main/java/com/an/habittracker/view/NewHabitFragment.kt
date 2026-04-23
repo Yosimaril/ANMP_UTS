@@ -6,13 +6,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.an.habittracker.R
+import androidx.navigation.Navigation
+import com.an.habittracker.databinding.FragmentNewHabitBinding
 
 class NewHabitFragment : Fragment() {
+    private lateinit var binding: FragmentNewHabitBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_habit, container, false)
+        binding = FragmentNewHabitBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnCreateHabit.setOnClickListener {
+            Navigation.findNavController(it).navigateUp()
+        }
     }
 }
