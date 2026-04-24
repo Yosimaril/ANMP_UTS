@@ -36,7 +36,12 @@ class FileHelper(val context: Context) {
             }
         } catch (e: IOException) {
             e.printStackTrace().toString()
+            ""
         }
+    }
+
+    fun deleteFile(): Boolean {
+        return getFile().delete()
     }
 
     fun getFilePath(): String {

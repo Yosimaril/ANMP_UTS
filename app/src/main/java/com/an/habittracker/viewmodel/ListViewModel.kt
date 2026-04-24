@@ -1,6 +1,7 @@
 package com.an.habittracker.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,12 +28,15 @@ class ListViewModel(application: Application): AndroidViewModel(application) {
             if (json.isNotEmpty()) {
                 val habits = Gson().fromJson<ArrayList<Habit>>(json, type)
                 habitsLD.value = habits
+                Log.d("LOG_INFO", "Parsed habits size: ${habits.size}")
             } else {
                 habitsLD.value = arrayListOf()
+                Log.d("LOG_INFO", "File is empty, returning empty list")
             }
         } catch (e: Exception) {
             habitsLoadErrorLD.value = true
             habitsLD.value = arrayListOf()
+            Log.e("LOG_INFO", "Error loading habits", e)
         }
 
         loadingLD.value = false
@@ -43,10 +47,12 @@ class ListViewModel(application: Application): AndroidViewModel(application) {
         currentList.add(habit)
         habitsLD.value = currentList
         saveHabits(currentList)
+        Log.d("LOG_INFO", "Added new habit")
     }
 
     private fun saveHabits(list: ArrayList<Habit>) {
         val json = Gson().toJson(list)
         fileHelper.writeToFile(json)
+        Log.d("LOG_INFO", "New habits saved")
     }
 }
