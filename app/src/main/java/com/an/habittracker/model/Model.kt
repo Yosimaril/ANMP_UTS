@@ -1,5 +1,10 @@
 package com.an.habittracker.model
 
 data class Habit(
-    var id:String?
+    val name: String,
+    val description: String,
+    val goal: Int,
+    val progress: Int = 0,
+    val unit: String,
+    val iconResId: Int
 )

@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
+    android:label="Welcome"
     app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.an.habittracker.view.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
+        android:label="Welcome"
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/actionLoginFragmentToDashboardFragment"
             app:destination="@id/dashboardFragment" />
@@ -17,8 +18,8 @@
     <fragment
         android:id="@+id/dashboardFragment"
         android:name="com.an.habittracker.view.DashboardFragment"
-        android:label="fragment_dashboard"
-        tools:layout="@layout/fragment_dashboard" >
+        android:label="Your Habits"
+        tools:layout="@layout/fragment_dashboard">
         <action
             android:id="@+id/actionDashboardFragmentToNewHabitFragment"
             app:destination="@id/newHabitFragment" />
@@ -26,6 +27,6 @@
     <fragment
         android:id="@+id/newHabitFragment"
         android:name="com.an.habittracker.view.NewHabitFragment"
-        android:label="fragment_new_habit"
+        android:label="Create New Habit"
         tools:layout="@layout/fragment_new_habit" />
 </navigation>

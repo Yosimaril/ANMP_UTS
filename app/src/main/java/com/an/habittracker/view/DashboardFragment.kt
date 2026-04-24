@@ -15,7 +15,7 @@ import com.an.habittracker.viewmodel.ListViewModel
 
 class DashboardFragment : Fragment() {
     private lateinit var viewModel: ListViewModel
-    private val studentListAdapter = HabitListAdapter(arrayListOf())
+    private val habitListAdapter  = HabitListAdapter(arrayListOf())
     private lateinit var binding: FragmentDashboardBinding
 
     override fun onCreateView(
@@ -30,10 +30,10 @@ class DashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
-        viewModel.refresh()
+        viewModel.loadHabits()
 
         binding.recViewHabit.layoutManager = LinearLayoutManager(context)
-        binding.recViewHabit.adapter = studentListAdapter
+        binding.recViewHabit.adapter = habitListAdapter
 
         binding.fabAddHabit.setOnClickListener {
             val action = DashboardFragmentDirections.actionDashboardFragmentToNewHabitFragment()
@@ -45,7 +45,7 @@ class DashboardFragment : Fragment() {
 
     fun observeViewModel() {
         viewModel.habitsLD.observe(viewLifecycleOwner, Observer {
-            studentListAdapter.updateHabitList(it)
+            habitListAdapter.updateHabitList(it)
         })
 
         viewModel.habitsLoadErrorLD.observe(viewLifecycleOwner, Observer {

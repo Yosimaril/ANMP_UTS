@@ -6,8 +6,8 @@ import java.io.IOException
 import java.io.FileOutputStream
 
 class FileHelper(val context: Context) {
-    val folderName = "myfolder"
-    val fileName = "mydata.txt"
+    val folderName = "habitTracker"
+    val fileName = "myHabit.txt"
 
     private fun getFile(): File {
         val dir = File(context.filesDir, folderName)
