@@ -9,19 +9,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.an.habittracker.R
 import com.an.habittracker.databinding.FragmentDashboardBinding
 import com.an.habittracker.viewmodel.ListViewModel
 
 class DashboardFragment : Fragment() {
     private lateinit var viewModel: ListViewModel
-    private val habitListAdapter  = HabitListAdapter(arrayListOf())
+    private lateinit var habitListAdapter: HabitListAdapter
     private lateinit var binding: FragmentDashboardBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentDashboardBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -29,8 +28,11 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
-        viewModel.loadHabits()
+        viewModel = ViewModelProvider(requireActivity()).get(ListViewModel::class.java)
+
+        habitListAdapter = HabitListAdapter(arrayListOf()) { name, newProgress ->
+            viewModel.updateHabitProgress(name, newProgress)
+        }
 
         binding.recViewHabit.layoutManager = LinearLayoutManager(context)
         binding.recViewHabit.adapter = habitListAdapter
@@ -41,23 +43,22 @@ class DashboardFragment : Fragment() {
         }
 
         observeViewModel()
+        viewModel.loadHabits()
     }
 
     fun observeViewModel() {
         viewModel.habitsLD.observe(viewLifecycleOwner, Observer {
-            habitListAdapter.updateHabitList(it)
-        })
-
-        viewModel.habitsLoadErrorLD.observe(viewLifecycleOwner, Observer {
-            if (it == true) {
-                binding.txtError.visibility = View.VISIBLE
-            } else {
-                binding.txtError.visibility = View.GONE
+            if (it != null) {
+                habitListAdapter.updateHabitList(it)
             }
         })
 
+        viewModel.habitsLoadErrorLD.observe(viewLifecycleOwner, Observer {
+            binding.txtError.visibility = if (it) View.VISIBLE else View.GONE
+        })
+
         viewModel.loadingLD.observe(viewLifecycleOwner, Observer {
-            if(it == true) {
+            if (it) {
                 binding.recViewHabit.visibility = View.GONE
                 binding.progressLoad.visibility = View.VISIBLE
             } else {

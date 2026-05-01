@@ -6,8 +6,8 @@ import java.io.IOException
 import java.io.FileOutputStream
 
 class FileHelper(val context: Context) {
-    val folderName = "habitTracker"
-    val fileName = "myHabit.txt"
+    private val folderName = "habitTracker"
+    private val fileName = "myHabit.txt"
 
     private fun getFile(): File {
         val dir = File(context.filesDir, folderName)
@@ -29,22 +29,18 @@ class FileHelper(val context: Context) {
     }
 
     fun readFromFile(): String {
+        val file = getFile()
+        if (!file.exists()) return ""
+
         return try {
-            val file = getFile()
-            file.bufferedReader().useLines { lines ->
-                lines.joinToString("\n")
-            }
+            file.readText()
         } catch (e: IOException) {
-            e.printStackTrace().toString()
+            e.printStackTrace()
             ""
         }
     }
 
     fun deleteFile(): Boolean {
         return getFile().delete()
-    }
-
-    fun getFilePath(): String {
-        return getFile().absolutePath
     }
 }

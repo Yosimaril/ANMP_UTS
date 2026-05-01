@@ -4,7 +4,6 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.an.habittracker.model.Habit
 import com.an.habittracker.util.FileHelper
 import com.google.gson.Gson
@@ -18,28 +17,28 @@ class ListViewModel(application: Application): AndroidViewModel(application) {
     private val type = object : TypeToken<ArrayList<Habit>>() {}.type
     private val fileHelper = FileHelper(getApplication())
 
+    init {
+        loadHabits()
+    }
+
     fun loadHabits() {
         loadingLD.value = true
         habitsLoadErrorLD.value = false
 
         try {
             val json = fileHelper.readFromFile()
-
             if (json.isNotEmpty()) {
                 val habits = Gson().fromJson<ArrayList<Habit>>(json, type)
                 habitsLD.value = habits
-                Log.d("LOG_INFO", "Parsed habits size: ${habits.size}")
             } else {
                 habitsLD.value = arrayListOf()
-                Log.d("LOG_INFO", "File is empty, returning empty list")
             }
         } catch (e: Exception) {
             habitsLoadErrorLD.value = true
             habitsLD.value = arrayListOf()
-            Log.e("LOG_INFO", "Error loading habits", e)
+        } finally {
+            loadingLD.value = false
         }
-
-        loadingLD.value = false
     }
 
     fun addHabit(habit: Habit) {
@@ -47,12 +46,22 @@ class ListViewModel(application: Application): AndroidViewModel(application) {
         currentList.add(habit)
         habitsLD.value = currentList
         saveHabits(currentList)
-        Log.d("LOG_INFO", "Added new habit")
+    }
+
+    fun updateHabitProgress(habitName: String, newProgress: Int) {
+        val currentList = habitsLD.value ?: return
+        val index = currentList.indexOfFirst { it.name == habitName }
+        if (index != -1) {
+            val oldHabit = currentList[index]
+            val updatedHabit = oldHabit.copy(progress = newProgress)
+            currentList[index] = updatedHabit
+            habitsLD.value = currentList
+            saveHabits(currentList)
+        }
     }
 
     private fun saveHabits(list: ArrayList<Habit>) {
         val json = Gson().toJson(list)
         fileHelper.writeToFile(json)
-        Log.d("LOG_INFO", "New habits saved")
     }
 }

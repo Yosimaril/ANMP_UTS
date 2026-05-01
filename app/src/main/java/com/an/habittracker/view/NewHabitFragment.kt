@@ -16,6 +16,7 @@ import com.an.habittracker.viewmodel.ListViewModel
 class NewHabitFragment : Fragment() {
     private lateinit var binding: FragmentNewHabitBinding
     private lateinit var viewModel: ListViewModel
+
     private val iconList = listOf(
         R.drawable.ic_grocery_store,
         R.drawable.ic_happy,
@@ -41,7 +42,7 @@ class NewHabitFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentNewHabitBinding.inflate(inflater, container, false)
         return binding.root
@@ -54,10 +55,9 @@ class NewHabitFragment : Fragment() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerNewHabitImage.adapter = adapter
 
-        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(ListViewModel::class.java)
 
         binding.btnCreateHabit.setOnClickListener {
-
             val name = binding.txtNewHabitName.editText?.text.toString()
             val description = binding.txtNewHabitDescription.editText?.text.toString()
             val goalStr = binding.txtNewHabitGoal.editText?.text.toString()
@@ -81,22 +81,28 @@ class NewHabitFragment : Fragment() {
                 isValid = false
             }
 
+            val goal = goalStr.toIntOrNull()
+            if (goal == null || goal <= 0) {
+                binding.txtNewHabitGoal.error = "Invalid goal"
+                isValid = false
+            }
+
             if (unit.isEmpty()) {
                 binding.txtNewHabitUnit.error = "Unit required"
                 isValid = false
             }
 
-            val goal = goalStr.toInt()
-            if (goal <= 0) {
-                binding.txtNewHabitGoal.error = "Invalid goal"
-                isValid = false
-            }
-
             if (isValid) {
-                val habit = Habit(name = name, description = description, goal = goal, progress = 0, unit = unit, iconResId = selectedIcon)
+                val habit = Habit(
+                    name = name,
+                    description = description,
+                    goal = goal ?: 0,
+                    progress = 0,
+                    unit = unit,
+                    iconResId = selectedIcon
+                )
 
                 viewModel.addHabit(habit)
-
                 Navigation.findNavController(it).navigateUp()
             }
         }
