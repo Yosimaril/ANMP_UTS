@@ -10,10 +10,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.an.habittracker.databinding.FragmentDashboardBinding
-import com.an.habittracker.viewmodel.ListViewModel
+import com.an.habittracker.viewmodel.HabitViewModel
 
 class DashboardFragment : Fragment() {
-    private lateinit var viewModel: ListViewModel
+    private lateinit var viewModel: HabitViewModel
     private lateinit var habitListAdapter: HabitListAdapter
     private lateinit var binding: FragmentDashboardBinding
 
@@ -28,7 +28,7 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(requireActivity()).get(ListViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(HabitViewModel::class.java)
 
         habitListAdapter = HabitListAdapter(arrayListOf()) { name, newProgress ->
             viewModel.updateHabitProgress(name, newProgress)

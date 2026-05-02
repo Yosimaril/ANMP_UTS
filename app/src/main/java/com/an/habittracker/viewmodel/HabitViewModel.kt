@@ -1,7 +1,6 @@
 package com.an.habittracker.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.an.habittracker.model.Habit
@@ -9,7 +8,7 @@ import com.an.habittracker.util.FileHelper
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class ListViewModel(application: Application): AndroidViewModel(application) {
+class HabitViewModel(application: Application): AndroidViewModel(application) {
     val habitsLoadErrorLD = MutableLiveData<Boolean>()
     val loadingLD = MutableLiveData<Boolean>()
     val habitsLD = MutableLiveData<ArrayList<Habit>>()

@@ -11,11 +11,11 @@ import com.an.habittracker.R
 import androidx.navigation.Navigation
 import com.an.habittracker.databinding.FragmentNewHabitBinding
 import com.an.habittracker.model.Habit
-import com.an.habittracker.viewmodel.ListViewModel
+import com.an.habittracker.viewmodel.HabitViewModel
 
 class NewHabitFragment : Fragment() {
     private lateinit var binding: FragmentNewHabitBinding
-    private lateinit var viewModel: ListViewModel
+    private lateinit var viewModel: HabitViewModel
 
     private val iconList = listOf(
         R.drawable.ic_grocery_store,
@@ -55,7 +55,7 @@ class NewHabitFragment : Fragment() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerNewHabitImage.adapter = adapter
 
-        viewModel = ViewModelProvider(requireActivity()).get(ListViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(HabitViewModel::class.java)
 
         binding.btnCreateHabit.setOnClickListener {
             val name = binding.txtNewHabitName.editText?.text.toString()
