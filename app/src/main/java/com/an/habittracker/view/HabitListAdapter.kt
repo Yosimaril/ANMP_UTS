@@ -1,5 +1,6 @@
 package com.an.habittracker.view
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -33,9 +34,12 @@ class HabitListAdapter(
                 prog.text = "Completed"
 
                 textView4.text = "Completed"
+                textView4.setBackgroundColor(Color.parseColor("#2E8B57"))
             } else {
                 prog.text = "Progress"
+
                 textView4.text = "In Progress"
+                textView4.setBackgroundColor(Color.parseColor("#075A96"))
             }
 
             btnHabitPlus.setOnClickListener {
