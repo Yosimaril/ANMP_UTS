@@ -29,13 +29,11 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
-
         observeViewModel(view)
 
         binding.btnLogin.setOnClickListener {
             val username = binding.fieldUsername.text.toString()
             val password = binding.fieldPassword.text.toString()
-
             viewModel.login(username, password)
         }
     }
@@ -45,13 +43,11 @@ class LoginFragment : Fragment() {
             if (it == true) {
                 val action = LoginFragmentDirections.actionLoginFragmentToDashboardFragment()
                 Navigation.findNavController(view).navigate(action)
-                viewModel.reset() // TODO: fix for to enable logout (TEMP)
+                viewModel.reset()
+            } else {
+                binding.txtUsername.error = viewModel.authErrorLD.value
+                binding.txtPassword.error = viewModel.authErrorLD.value
             }
-        })
-
-        viewModel.authErrorLD.observe(viewLifecycleOwner, Observer {
-            binding.txtUsername.error = it
-            binding.txtPassword.error = it
         })
     }
 }
