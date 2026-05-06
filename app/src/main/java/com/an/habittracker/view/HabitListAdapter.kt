@@ -32,29 +32,23 @@ class HabitListAdapter(
 
             if (habit.progress >= habit.goal) {
                 prog.text = "Completed"
-
                 textView4.text = "Completed"
                 textView4.setBackgroundColor(Color.parseColor("#2E8B57"))
             } else {
                 prog.text = "Progress"
-
                 textView4.text = "In Progress"
                 textView4.setBackgroundColor(Color.parseColor("#075A96"))
             }
 
             btnHabitPlus.setOnClickListener {
-                val currentHabit = habitList[holder.adapterPosition]
-                if (currentHabit.progress < currentHabit.goal) {
-                    val nextProgress = currentHabit.progress + 1
-                    onProgressChanged(currentHabit.name, nextProgress)
+                if (habit.progress < habit.goal) {
+                    onProgressChanged(habit.id, habit.progress + 1)
                 }
             }
 
             btnHabitMinus.setOnClickListener {
-                val currentHabit = habitList[holder.adapterPosition]
-                if (currentHabit.progress > 0) {
-                    val nextProgress = currentHabit.progress - 1
-                    onProgressChanged(currentHabit.name, nextProgress)
+                if (habit.progress > 0) {
+                    onProgressChanged(habit.id, habit.progress - 1)
                 }
             }
         }

@@ -56,54 +56,29 @@ class NewHabitFragment : Fragment() {
         binding.spinnerNewHabitImage.adapter = adapter
 
         viewModel = ViewModelProvider(requireActivity()).get(HabitViewModel::class.java)
+        observeViewModel()
 
         binding.btnCreateHabit.setOnClickListener {
-            val name = binding.txtNewHabitName.editText?.text.toString()
-            val description = binding.txtNewHabitDescription.editText?.text.toString()
-            val goalStr = binding.txtNewHabitGoal.editText?.text.toString()
-            val unit = binding.txtNewHabitUnit.editText?.text.toString()
-            val selectedIcon = iconList[binding.spinnerNewHabitImage.selectedItemPosition]
+            viewModel.validateHabit(
+                name = binding.txtNewHabitName.editText?.text.toString(),
+                description = binding.txtNewHabitDescription.editText?.text.toString(),
+                goalString = binding.txtNewHabitGoal.editText?.text.toString(),
+                unit = binding.txtNewHabitUnit.editText?.text.toString(),
+                iconResId = iconList[binding.spinnerNewHabitImage.selectedItemPosition]
+            )
+        }
+    }
 
-            var isValid = true
+    private fun observeViewModel() {
+        viewModel.formStateLD.observe(viewLifecycleOwner) { state ->
+            binding.txtNewHabitName.error = state.nameError
+            binding.txtNewHabitDescription.error = state.descriptionError
+            binding.txtNewHabitGoal.error = state.goalError
+            binding.txtNewHabitUnit.error = state.unitError
 
-            binding.txtNewHabitName.error = null
-            binding.txtNewHabitDescription.error = null
-            binding.txtNewHabitGoal.error = null
-            binding.txtNewHabitUnit.error = null
-
-            if (name.isEmpty()) {
-                binding.txtNewHabitName.error = "Name required"
-                isValid = false
-            }
-
-            if (description.isEmpty()) {
-                binding.txtNewHabitDescription.error = "Description required"
-                isValid = false
-            }
-
-            val goal = goalStr.toIntOrNull()
-            if (goal == null || goal <= 0) {
-                binding.txtNewHabitGoal.error = "Invalid goal"
-                isValid = false
-            }
-
-            if (unit.isEmpty()) {
-                binding.txtNewHabitUnit.error = "Unit required"
-                isValid = false
-            }
-
-            if (isValid) {
-                val habit = Habit(
-                    name = name,
-                    description = description,
-                    goal = goal ?: 0,
-                    progress = 0,
-                    unit = unit,
-                    iconResId = selectedIcon
-                )
-
-                viewModel.addHabit(habit)
-                Navigation.findNavController(it).navigateUp()
+            if (state.isValid) {
+                viewModel.resetFormState()
+                Navigation.findNavController(requireView()).navigateUp()
             }
         }
     }

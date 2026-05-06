@@ -30,19 +30,22 @@ class DashboardFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity()).get(HabitViewModel::class.java)
 
-        habitListAdapter = HabitListAdapter(arrayListOf()) { name, newProgress ->
-            viewModel.updateHabitProgress(name, newProgress)
+        habitListAdapter = HabitListAdapter(arrayListOf()) { habitId, newProgress ->
+            viewModel.updateHabitProgress(habitId, newProgress)
         }
 
         binding.recViewHabit.layoutManager = LinearLayoutManager(context)
         binding.recViewHabit.adapter = habitListAdapter
 
+        observeViewModel()
+
         binding.fabAddHabit.setOnClickListener {
+            viewModel.resetFormState()
+
             val action = DashboardFragmentDirections.actionDashboardFragmentToNewHabitFragment()
             Navigation.findNavController(it).navigate(action)
         }
 
-        observeViewModel()
         viewModel.loadHabits()
     }
 

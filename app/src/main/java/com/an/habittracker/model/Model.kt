@@ -11,3 +11,11 @@ data class Habit(
     val unit: String,
     val iconResId: Int
 )
+
+data class HabitFormState(
+    val nameError: String? = null,
+    val descriptionError: String? = null,
+    val goalError: String? = null,
+    val unitError: String? = null,
+    val isValid: Boolean = false
+)
