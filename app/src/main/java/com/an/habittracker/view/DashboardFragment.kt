@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.an.habittracker.databinding.FragmentDashboardBinding
+import com.an.habittracker.model.Habit
 import com.an.habittracker.viewmodel.HabitViewModel
 
 class DashboardFragment : Fragment() {
@@ -30,8 +31,19 @@ class DashboardFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity()).get(HabitViewModel::class.java)
 
-        habitListAdapter = HabitListAdapter(arrayListOf()) { habitId, newProgress ->
-            viewModel.updateHabitProgress(habitId, newProgress)
+        habitListAdapter = HabitListAdapter(arrayListOf())
+        habitListAdapter.listener = object : HabitListAdapter.HabitItemListener {
+            override fun onPlusClick(habit: Habit) {
+                if (habit.progress < habit.goal) {
+                    viewModel.updateHabitProgress(habit.id, habit.progress + 1)
+                }
+            }
+
+            override fun onMinusClick(habit: Habit) {
+                if (habit.progress > 0) {
+                    viewModel.updateHabitProgress(habit.id, habit.progress - 1)
+                }
+            }
         }
 
         binding.recViewHabit.layoutManager = LinearLayoutManager(context)
@@ -41,7 +53,6 @@ class DashboardFragment : Fragment() {
 
         binding.fabAddHabit.setOnClickListener {
             viewModel.resetFormState()
-
             val action = DashboardFragmentDirections.actionDashboardFragmentToNewHabitFragment()
             Navigation.findNavController(it).navigate(action)
         }

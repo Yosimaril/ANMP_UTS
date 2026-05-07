@@ -8,9 +8,15 @@ import com.an.habittracker.databinding.HabitListItemBinding
 import com.an.habittracker.model.Habit
 
 class HabitListAdapter(
-    val habitList: ArrayList<Habit>,
-    val onProgressChanged: (String, Int) -> Unit
+    val habitList: ArrayList<Habit>
 ) : RecyclerView.Adapter<HabitListAdapter.HabitViewHolder>() {
+
+    interface HabitItemListener {
+        fun onPlusClick(habit: Habit)
+        fun onMinusClick(habit: Habit)
+    }
+
+    var listener: HabitItemListener? = null
 
     class HabitViewHolder(var binding: HabitListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -41,15 +47,11 @@ class HabitListAdapter(
             }
 
             btnHabitPlus.setOnClickListener {
-                if (habit.progress < habit.goal) {
-                    onProgressChanged(habit.id, habit.progress + 1)
-                }
+                listener?.onPlusClick(habit)
             }
 
             btnHabitMinus.setOnClickListener {
-                if (habit.progress > 0) {
-                    onProgressChanged(habit.id, habit.progress - 1)
-                }
+                listener?.onMinusClick(habit)
             }
         }
     }
