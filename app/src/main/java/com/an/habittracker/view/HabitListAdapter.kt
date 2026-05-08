@@ -6,18 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.an.habittracker.databinding.HabitListItemBinding
 import com.an.habittracker.model.Habit
+import com.an.habittracker.viewmodel.HabitViewModel
 
 class HabitListAdapter(
-    val habitList: ArrayList<Habit>
+    val habitList: ArrayList<Habit>,
+    val viewModel: HabitViewModel
 ) : RecyclerView.Adapter<HabitListAdapter.HabitViewHolder>() {
-
-    interface HabitItemListener {
-        fun onPlusClick(habit: Habit)
-        fun onMinusClick(habit: Habit)
-    }
-
-    var listener: HabitItemListener? = null
-
     class HabitViewHolder(var binding: HabitListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
@@ -47,11 +41,15 @@ class HabitListAdapter(
             }
 
             btnHabitPlus.setOnClickListener {
-                listener?.onPlusClick(habit)
+                if (habit.progress < habit.goal) {
+                    viewModel.updateHabitProgress(habit.id, habit.progress + 1)
+                }
             }
 
             btnHabitMinus.setOnClickListener {
-                listener?.onMinusClick(habit)
+                if (habit.progress > 0) {
+                    viewModel.updateHabitProgress(habit.id, habit.progress - 1)
+                }
             }
         }
     }

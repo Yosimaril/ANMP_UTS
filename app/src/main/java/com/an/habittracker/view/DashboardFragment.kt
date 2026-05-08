@@ -31,20 +31,7 @@ class DashboardFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity()).get(HabitViewModel::class.java)
 
-        habitListAdapter = HabitListAdapter(arrayListOf())
-        habitListAdapter.listener = object : HabitListAdapter.HabitItemListener {
-            override fun onPlusClick(habit: Habit) {
-                if (habit.progress < habit.goal) {
-                    viewModel.updateHabitProgress(habit.id, habit.progress + 1)
-                }
-            }
-
-            override fun onMinusClick(habit: Habit) {
-                if (habit.progress > 0) {
-                    viewModel.updateHabitProgress(habit.id, habit.progress - 1)
-                }
-            }
-        }
+        habitListAdapter = HabitListAdapter(arrayListOf(), viewModel)
 
         binding.recViewHabit.layoutManager = LinearLayoutManager(context)
         binding.recViewHabit.adapter = habitListAdapter
